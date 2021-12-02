@@ -45,6 +45,10 @@ const moduleFileExtensions = [
   'jsx',
 ];
 
+const moduleFederationConfigFiles = [
+  'modulefederation.config.js',
+];
+
 // Resolve file paths in the same order as webpack
 const resolveModule = (resolveFn, filePath) => {
   const extension = moduleFileExtensions.find(extension =>
@@ -73,6 +77,10 @@ module.exports = {
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveModule(resolveApp, 'src/setupTests'),
   proxySetup: resolveApp('src/setupProxy.js'),
+  appMFConfigFile: moduleFederationConfigFiles
+    .map(resolveApp)
+    .filter(fs.existsSync)
+    .shift(),
   appNodeModules: resolveApp('node_modules'),
   appWebpackCache: resolveApp('node_modules/.cache'),
   appTsBuildInfoFile: resolveApp('node_modules/.cache/tsconfig.tsbuildinfo'),
@@ -98,6 +106,10 @@ module.exports = {
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveModule(resolveApp, 'src/setupTests'),
   proxySetup: resolveApp('src/setupProxy.js'),
+  appMFConfigFile: moduleFederationConfigFiles
+    .map(resolveApp)
+    .filter(fs.existsSync)
+    .shift(),
   appNodeModules: resolveApp('node_modules'),
   appWebpackCache: resolveApp('node_modules/.cache'),
   appTsBuildInfoFile: resolveApp('node_modules/.cache/tsconfig.tsbuildinfo'),
@@ -136,6 +148,11 @@ if (
     yarnLockFile: resolveOwn(`${templatePath}/yarn.lock`),
     testsSetup: resolveModule(resolveOwn, `${templatePath}/src/setupTests`),
     proxySetup: resolveOwn(`${templatePath}/src/setupProxy.js`),
+    appMFConfigFile: moduleFederationConfigFiles
+      .map(p => `${templatePath}/${p}`)
+      .map(resolveOwn)
+      .filter(fs.existsSync)
+      .shift(),
     appNodeModules: resolveOwn('node_modules'),
     appWebpackCache: resolveOwn('node_modules/.cache'),
     appTsBuildInfoFile: resolveOwn('node_modules/.cache/tsconfig.tsbuildinfo'),
